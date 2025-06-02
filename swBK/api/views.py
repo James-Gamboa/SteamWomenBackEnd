@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from .permission import IsRol
 from rest_framework.response import Response
 from rest_framework import status
@@ -71,6 +71,13 @@ class UserListCreateView(ListCreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [AllowAny]  # Permitir acceso a usuarios no autenticados
+    def perform_create(self, serializer):
+        if serializer.is_valid():
+            user = serializer.save()  # Guardar el usuario
+            grupo_admin, _ = Group.objects.get_or_create(name="admin")  # Obtener o crear grupo
+            user.groups.add(grupo_admin)  # Asignar grupo automáticamente
+            return Response({"message": "User registered successfully."}, status=status.HTTP_201_CREATED)
+        return Response({"errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 class UserDetailView(RetrieveUpdateDestroyAPIView):
     required_roles = ["admin"] 

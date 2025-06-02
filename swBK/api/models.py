@@ -1,9 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User 
 
+
 # Create your models here.
 
-from django.db import models
 
 # Tabla de Provincias
 class Provincia(models.Model):
@@ -97,3 +97,4 @@ class Notificacion(models.Model):
 
     def __str__(self):
         return f"Notificación para {self.usuario}"
+

@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     "corsheaders",
 ]
 
+
+
 REST_FRAMEWORK ={
     'DEFAULT_AUTHENTICATION_CLASSES':(
         'rest_framework_simplejwt.authentication.JWTAuthentication',
@@ -52,7 +54,7 @@ REST_FRAMEWORK ={
 }
 
 SIMPLE_JWT ={
-    'ACCESS_TOKEN_LIFETIME':timedelta(minutes=60),
+    'ACCESS_TOKEN_LIFETIME':timedelta(days=3),
     'REFRESH_TOKEN_LIFETIME':timedelta(days=1),
 }
 
@@ -66,6 +68,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
 ]
+
 
 ROOT_URLCONF = 'swBK.urls'
 

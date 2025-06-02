@@ -2,16 +2,16 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 from .models import  PerfilUsuario, Empresa, TipoOportunidad, Oportunidad, Participacion, Notificacion, Provincia, Canton, Distrito
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from django.contrib.auth import authenticate
 
+#Serailizardor para el token
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
-
-        # Obtener el primer grupo del usuario (asumiendo 1 grupo por usuario)
         group = user.groups.first()
         token['role'] = group.name if group else None
-
         return token
 
     def validate(self, attrs):
@@ -24,6 +24,29 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         
         return data
 
+    def validateuser(self, attrs):
+      
+        username_or_email = attrs.get("username", None)  # Si no hay `username`, usa `email`
+        password = attrs.get("password")
+
+        if not username_or_email:
+            raise serializers.ValidationError({"email": "Este campo es obligatorio."})
+
+        user = authenticate(username=username_or_email, password=password)
+
+        if user is None:
+            try:
+                user = User.objects.get(email=username_or_email)
+                user = authenticate(username=user.username, password=password)
+            except User.DoesNotExist:
+                raise serializers.ValidationError("No active account found with the given credentials")
+
+        if user:
+            data = super().validate(attrs)
+            data["role"] = user.groups.first().name if user.groups.exists() else "usuario"
+            return data
+        else:
+            raise serializers.ValidationError("No active account found with the given credentials")
 # Serializador para Provincias
 class ProvinciaSerializer(serializers.ModelSerializer):
     class Meta:
@@ -47,10 +70,9 @@ class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, min_length=8)  # Validación de contraseña
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'first_name', 'last_name', "password"]
+        fields = ['id', 'email', 'first_name', 'last_name', 'password']
     def create(self, validated_data):
         usuario = User(
-            username=validated_data["username"],
             email=validated_data["email"]
         )
         usuario.set_password(validated_data["password"])  # Encriptación de contraseña
@@ -103,3 +125,5 @@ class NotificacionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notificacion
         fields = '__all__'
+
+
