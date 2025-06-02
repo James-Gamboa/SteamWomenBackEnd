@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     "corsheaders",
 ]
 
+
+
 REST_FRAMEWORK ={
     'DEFAULT_AUTHENTICATION_CLASSES':(
         'rest_framework_simplejwt.authentication.JWTAuthentication',
@@ -52,7 +54,7 @@ REST_FRAMEWORK ={
 }
 
 SIMPLE_JWT ={
-    'ACCESS_TOKEN_LIFETIME':timedelta(minutes=60),
+    'ACCESS_TOKEN_LIFETIME':timedelta(days=3),
     'REFRESH_TOKEN_LIFETIME':timedelta(days=1),
 }
 
@@ -66,6 +68,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
 ]
+
 
 ROOT_URLCONF = 'swBK.urls'
 
@@ -144,7 +147,10 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+#ALLOWED_HOSTS = ['localhost, http://127.0.0.1:8000/','web-production-17d9.up.railway.app']
+
 CORS_ALLOWED_ORIGINS=[
     "http://localhost:5173",
+    "http://localhost:3000",
 
 ]
