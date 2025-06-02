@@ -147,7 +147,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-ALLOWED_HOSTS = ['localhost','web-production-17d9.up.railway.app']
+#ALLOWED_HOSTS = ['localhost, http://127.0.0.1:8000/','web-production-17d9.up.railway.app']
 
 CORS_ALLOWED_ORIGINS=[
     "http://localhost:5173",
