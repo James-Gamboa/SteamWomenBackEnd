@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User 
+from django.utils.text import slugify
 
 
 # Create your models here.
@@ -61,10 +62,35 @@ class TipoOportunidad(models.Model):
     def __str__(self):
         return self.nombre_tipo
 
+# Tabla de Requisitos
+class Requisito(models.Model):
+    descripcion = models.CharField(max_length=200)
+    
+    def __str__(self):
+        return self.descripcion
+
+# Tabla de Beneficios
+class Beneficio(models.Model):
+    descripcion = models.CharField(max_length=200)
+    
+    def __str__(self):
+        return self.descripcion
+
+# Tabla de Agenda Items
+class AgendaItem(models.Model):
+    hora = models.TimeField()
+    actividad = models.CharField(max_length=100)
+    descripcion = models.TextField()
+    
+    def __str__(self):
+        return f"{self.hora} - {self.actividad}"
+
 # Tabla de Oportunidades
 class Oportunidad(models.Model):
     titulo = models.CharField(max_length=100)
+    slug = models.SlugField(unique=True)
     descripcion = models.TextField()
+    descripcion_completa = models.TextField()
     tipo_oportunidad = models.ForeignKey(TipoOportunidad, on_delete=models.CASCADE)
     fecha_inicio = models.DateField()
     fecha_fin = models.DateField()
@@ -73,6 +99,18 @@ class Oportunidad(models.Model):
     canton = models.ForeignKey(Canton, on_delete=models.SET_NULL, null=True, blank=True)
     distrito = models.ForeignKey(Distrito, on_delete=models.SET_NULL, null=True, blank=True)
     empresa = models.ForeignKey(Empresa, on_delete=models.CASCADE)
+    imagen = models.URLField(blank=True, null=True)
+    requisitos = models.ManyToManyField(Requisito)
+    beneficios = models.ManyToManyField(Beneficio)
+    proceso_aplicacion = models.TextField()
+    sitio_web = models.URLField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.titulo)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.titulo
@@ -97,4 +135,36 @@ class Notificacion(models.Model):
 
     def __str__(self):
         return f"Notificación para {self.usuario}"
+
+# Tabla de Eventos
+class Evento(models.Model):
+    titulo = models.CharField(max_length=100)
+    slug = models.SlugField(unique=True)
+    descripcion = models.TextField()
+    descripcion_completa = models.TextField()
+    fecha = models.DateField()
+    hora = models.TimeField()
+    modalidad = models.CharField(max_length=10, choices=[('Presencial', 'Presencial'), ('Virtual', 'Virtual')])
+    provincia = models.ForeignKey(Provincia, on_delete=models.SET_NULL, null=True, blank=True)
+    canton = models.ForeignKey(Canton, on_delete=models.SET_NULL, null=True, blank=True)
+    distrito = models.ForeignKey(Distrito, on_delete=models.SET_NULL, null=True, blank=True)
+    empresa = models.ForeignKey(Empresa, on_delete=models.CASCADE)
+    imagen = models.URLField(blank=True, null=True)
+    requisitos = models.ManyToManyField(Requisito)
+    beneficios = models.ManyToManyField(Beneficio)
+    agenda = models.ManyToManyField(AgendaItem)
+    capacidad = models.IntegerField()
+    precio = models.DecimalField(max_digits=10, decimal_places=2)
+    sitio_web = models.URLField(blank=True, null=True)
+    url_registro = models.URLField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.titulo)
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.titulo
 

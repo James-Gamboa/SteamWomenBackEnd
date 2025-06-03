@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'swBK',
     "api",
     "corsheaders",
+    'graphene_django',
 ]
 
 
@@ -153,4 +154,17 @@ CORS_ALLOWED_ORIGINS=[
     "http://localhost:5173",
     "http://localhost:3000",
 
+]
+
+# GraphQL Configuration
+GRAPHENE = {
+    'SCHEMA': 'swBK.schema.schema',
+    'MIDDLEWARE': [
+        'graphql_jwt.middleware.JSONWebTokenMiddleware',
+    ],
+}
+
+AUTHENTICATION_BACKENDS = [
+    'graphql_jwt.backends.JSONWebTokenBackend',
+    'django.contrib.auth.backends.ModelBackend',
 ]
