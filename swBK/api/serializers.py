@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import  PerfilUsuario, Empresa, TipoOportunidad, Oportunidad, Participacion, Notificacion, Provincia, Canton, Distrito
+from .models import  PerfilUsuario, Empresa, TipoOportunidad, Oportunidad, Participacion, Notificacion, Provincia, Canton, Distrito, Event
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth import authenticate
 
@@ -48,6 +48,8 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         else:
             raise serializers.ValidationError("No active account found with the given credentials")
 # Serializador para Provincias
+
+
 class ProvinciaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Provincia
@@ -92,7 +94,16 @@ class EmpresaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Empresa
         fields = '__all__'
+        
+class EventSerializer(serializers.ModelSerializer):
+    created_by = EmpresaSerializer()  # Incluye los datos de la empresa creadora
 
+    class Meta:
+        model = Event
+        fields = [
+             "title", "description", "date", "time", "location",
+             "created_at", "created_by"
+        ]
 # Serializador para Tipos de Oportunidad
 class TipoOportunidadSerializer(serializers.ModelSerializer):
     class Meta:
@@ -125,5 +136,3 @@ class NotificacionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notificacion
         fields = '__all__'
-
-

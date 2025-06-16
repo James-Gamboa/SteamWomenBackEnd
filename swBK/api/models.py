@@ -76,6 +76,18 @@ class Oportunidad(models.Model):
 
     def __str__(self):
         return self.titulo
+    
+
+    
+#Eventos
+class Event(models.Model):
+    title = models.CharField(max_length=255)
+    description = models.TextField()
+    date = models.DateField()
+    time = models.TimeField()
+    location = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(Empresa, on_delete=models.CASCADE, related_name="events")  # Relación directa con Company
 
 # Tabla de Participaciones (Usuarios inscritos en oportunidades)
 class Participacion(models.Model):

@@ -10,13 +10,13 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .models import (
     PerfilUsuario, Empresa, TipoOportunidad, Oportunidad, Participacion, 
-    Notificacion, Provincia, Canton, Distrito
+    Notificacion, Provincia, Canton, Distrito,Event
 )
 from .serializers import (
     ProvinciaSerializer, CantonSerializer, DistritoSerializer,
     UserSerializer, PerfilUsuarioSerializer, EmpresaSerializer,
     TipoOportunidadSerializer, OportunidadSerializer, 
-    ParticipacionSerializer, NotificacionSerializer, CustomTokenObtainPairSerializer
+    ParticipacionSerializer, NotificacionSerializer, CustomTokenObtainPairSerializer,EventSerializer
 )
 
 class CustomTokenObtainPairView(TokenObtainPairView):
@@ -154,15 +154,22 @@ class TipoOportunidadRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
 class OportunidadListCreateAPIView(ListCreateAPIView):
     queryset = Oportunidad.objects.all()
     serializer_class = OportunidadSerializer
-    required_roles = ["admin","empresa","estudiante"] 
-    permission_classes = [IsRol]
+    #required_roles = ["admin","empresa","estudiante"] 
+    #permission_classes = [IsRol]
 
 class OportunidadRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
     queryset = Oportunidad.objects.all()
     serializer_class = OportunidadSerializer
-    required_roles = ["admin"] 
-    permission_classes = [IsRol]
+    #required_roles = ["admin"] 
+    #permission_classes = [IsRol]
 
+class EventListCreateAPIView(ListCreateAPIView):
+    queryset = Event.objects.all()
+    serializer_class = EventSerializer
+    
+class EventRetrieveUpdateDestroyAPIView(ListCreateAPIView):
+    queryset = Event.objects.all()
+    serializer_class = EventSerializer
 
 # ---------------------------
 # VISTAS PARA PARTICIPACIONES

@@ -9,7 +9,7 @@ from .views import (
     OportunidadListCreateAPIView, OportunidadRetrieveUpdateDestroyAPIView,
     ParticipacionListCreateAPIView, ParticipacionRetrieveUpdateDestroyAPIView,
     NotificacionListCreateAPIView, NotificacionRetrieveUpdateDestroyAPIView, UserListCreateView, 
-    UserDetailView, CustomTokenObtainPairView
+    UserDetailView, CustomTokenObtainPairView, EventListCreateAPIView, EventRetrieveUpdateDestroyAPIView
     
 )
 
@@ -44,6 +44,10 @@ urlpatterns = [
     # Oportunidades
     path('oportunidades/', OportunidadListCreateAPIView.as_view(), name='oportunidades-list'),
     path('oportunidades/<int:pk>/', OportunidadRetrieveUpdateDestroyAPIView.as_view(), name='oportunidades-detail'),
+    
+    #Eventos
+    path('eventos/', EventListCreateAPIView.as_view(), name='eventos-list'),
+    path('eventos/<int:pk>/', EventRetrieveUpdateDestroyAPIView.as_view(), name='eventos-detail'),
 
     # Participaciones
     path('participaciones/', ParticipacionListCreateAPIView.as_view(), name='participaciones-list'),
